@@ -113,10 +113,6 @@ public class Cuenta {
         return dineroExtraido;
     }
 
-    @Override
-    public String toString() {
-        return user + " - " + pass; //To change body of generated methods, choose Tools | Templates.
-    }
     
     
     

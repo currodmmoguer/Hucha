@@ -12,8 +12,6 @@ import com.db4o.config.EmbeddedConfiguration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 
@@ -29,7 +27,6 @@ public class GestionDB {
         ObjectContainer db = abrirDB(1);
         ObjectSet<Cuenta> result = db.queryByExample(new Cuenta(nombreUsuario));
         Double saldo = result.next().getSaldo();
-
         db.close();
         return saldo;
     }
@@ -103,7 +100,7 @@ public class GestionDB {
                 .mapToDouble(Movimiento::getImporte).sum();
 
         db.close();
-
+                
         return total;
     }
 
@@ -170,7 +167,6 @@ public class GestionDB {
 //Evolucion gastos e ingresos de distintos meses
     // Ultimo trimestre
     public static double[] evolucionIngresosTrimestre(String usuario) {
-        String meses[] = new String[3];
         double ingresos[] = new double[3];
         double totalIngresos;
         ObjectContainer db = abrirDB();
@@ -178,21 +174,17 @@ public class GestionDB {
         LocalDateTime fechaFin = null;
         Cuenta c;
 
-        for (int i = 0; i < meses.length; i++) {
-            meses[i] = obtenerMes(LocalDateTime.now().getMonthValue() - i);
-        }
-
         ObjectSet<Cuenta> result = db.queryByExample(new Cuenta(usuario));
 
         c = result.next();
         for (int i = 0; i < 3; i++) {
 
             totalIngresos = 0;
-            if (i == 0) {
+            if (i == 0) { //Obtiene desde el 1 de este mes hasta el dia de hoy
                 fechaIni = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), 1,
                         0, 0);
                 fechaFin = LocalDateTime.now();
-            } else {
+            } else { //Obtiene el mes anterior completo
                 fechaIni = fechaIni.minusMonths(1);
                 fechaFin = fechaIni.plusMonths(1).minusDays(1);
             }
@@ -216,7 +208,6 @@ public class GestionDB {
     }
 
     public static double[] evolucionGastosTrimestre(String usuario) {
-        String meses[] = new String[3];
         double gastos[] = new double[3];
         double totalGastos;
         ObjectContainer db = abrirDB();
@@ -224,9 +215,6 @@ public class GestionDB {
         LocalDateTime fechaFin = null;
         Cuenta c;
 
-        for (int i = 0; i < meses.length; i++) {
-            meses[i] = obtenerMes(LocalDateTime.now().getMonthValue() - i);
-        }
 
         ObjectSet<Cuenta> result = db.queryByExample(new Cuenta(usuario));
 
@@ -273,11 +261,11 @@ public class GestionDB {
         for (int i = 0; i < 6; i++) {
 
             totalIngresos = 0;
-            if (i == 0) {
+            if (i == 0) { 
                 fechaIni = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), 1,
                         0, 0);
                 fechaFin = LocalDateTime.now();
-            } else {
+            } else { 
                 fechaIni = fechaIni.minusMonths(1);
                 fechaFin = fechaIni.plusMonths(1).minusDays(1);
             }
@@ -300,7 +288,6 @@ public class GestionDB {
     }
 
     public static double[] evolucionGastosSemestre(String usuario) {
-        String meses[] = new String[6];
         double gastos[] = new double[6];
         double totalGastos;
         ObjectContainer db = abrirDB();
@@ -543,6 +530,19 @@ public class GestionDB {
 
         return existe;
 
+    }
+    
+    public static ArrayList<String> getNombreCuentas(){
+        ArrayList<String> nombreCuentas = new ArrayList<String>();
+        ObjectContainer db = abrirDB(1);
+        ObjectSet<Cuenta> result = db.queryByExample(new Cuenta());
+        
+        for (Cuenta c: result){
+            nombreCuentas.add(c.getUser());
+        }
+        
+        db.close();
+        return nombreCuentas;
     }
 
     public static boolean estaVacia() {

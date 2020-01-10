@@ -37,12 +37,15 @@ public class ControladorNuevoMovimiento implements ActionListener {
         String comando = e.getActionCommand();
 
         try {
-                
+
             if (comando.equals("INGRESAR")) {
                 GestionDB.nuevoIngreso(vista.getImporte(), usuario);
             } else {
-                if (vista.getConcepto() == null || vista.getConcepto().length() == 0)
+
+                if (vista.getConcepto() == null || vista.getConcepto().length() == 0) {
                     throw new CuentaException("Debes introducir un concepto");
+                }
+
                 GestionDB.nuevaExtraccion(vista.getImporte(), vista.getConcepto(), usuario);
             }
             dialog.dispose();
@@ -51,7 +54,6 @@ public class ControladorNuevoMovimiento implements ActionListener {
             JOptionPane.showMessageDialog(dialog, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        
     }
 
 }

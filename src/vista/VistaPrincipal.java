@@ -239,7 +239,13 @@ public class VistaPrincipal extends javax.swing.JPanel {
     private void setBarra() {
         double gastos = Double.parseDouble(labelCantidadGastos.getText());
         double ingresos = Double.parseDouble(labelCantidadIngresos.getText());
-        barra.setValue((int) (ingresos * 100 / (ingresos + gastos)));
+        if (gastos == ingresos){
+            barra.setValue(50);
+        } else {
+            barra.setValue((int) (ingresos * 100 / (ingresos + gastos)));
+        }
+        
+        
     }
 
     public String getPeriodo() {

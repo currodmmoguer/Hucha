@@ -32,15 +32,6 @@ public class Hucha {
     public static void main(String[] args) throws CuentaException {
         //insertar();
         
-//        ObjectContainer db = GestionDB.abrirDB();
-//        ObjectSet<Cuenta> result = db.queryByExample(new Cuenta());
-//        
-//        for (Cuenta c: result){
-//            System.out.println(c);
-//        }
-        
-        
-        
         JFrame ventana = new JFrame();
         VistaPrincipal vista = new VistaPrincipal();
         BarraHerramientas herramientas = new BarraHerramientas();

@@ -5,23 +5,16 @@
  */
 package controlador;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import static java.lang.System.exit;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import modelo.Cuenta;
 import modelo.GestionDB;
 import modelo.Movimiento;
-import vista.CambiarUsuario;
 import vista.NuevoMovimiento;
 import vista.NuevoUsuario;
 import vista.VistaGraficas;
@@ -36,22 +29,20 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
 
     private static final String DB = "db/hucha.oo";
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
-    
+
     private VistaPrincipal vista;
     private JFrame ventana;
     public String usuario;
-    private ArrayList<Movimiento> movimientos;
 
     public ControladorPrincipal(VistaPrincipal v, JFrame ventana) {
         vista = v;
         this.ventana = ventana;
-        if (GestionDB.estaVacia())
+
+        if (GestionDB.estaVacia()) {
             nuevoUsuario();
-        else
+        } else {
             login();
-        
-        if (usuario == null)
-            exit(0);
+        }
 
         mostrarDatos();
 
@@ -83,7 +74,7 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
                 nuevoUsuario();
                 break;
             case "CAMBIARUSUARIO":
-                cambiarUsuario();
+                login();
                 break;
             case "VERMAS":
                 vermas();
@@ -94,42 +85,6 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
         }
 
     }
-
-
-    
-    private void cambiarUsuario(){
-        JDialog dialogo = new JDialog();
-        CambiarUsuario panel = new CambiarUsuario();
-        panel.addControlador(new ControladorCambioCuenta(panel, this, dialogo));
-        dialogo.setModal(true);
-        dialogo.add(panel);
-        dialogo.setTitle("Cambio de usuario");
-        dialogo.pack();
-        dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialogo.setLocationRelativeTo(null);
-        dialogo.setResizable(false);
-        dialogo.setModal(true);
-        dialogo.setVisible(true);
-    }
-    
-
-    private void nuevoUsuario(){
-        JDialog dialogo = new JDialog();
-        NuevoUsuario panel = new NuevoUsuario();
-        panel.addControlador(new ControladorNuevoUsuario(panel, this, dialogo));
-        dialogo.setModal(true);
-        dialogo.add(panel);
-        dialogo.setTitle("Nuevo usuario");
-        dialogo.pack();
-        dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialogo.setLocationRelativeTo(null);
-        dialogo.setResizable(false);
-        dialogo.setModal(true);
-        dialogo.setVisible(true);
-    }
- 
-
-
 
     /**
      * Muestra todos los datos de la cuenta indicada
@@ -146,7 +101,6 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
      */
     private void mostrarIngresosYGastos() {
         double ingresos = 0, gastos = 0;
-        
 
         switch (vista.getPeriodo()) {
             case "Anual":
@@ -165,7 +119,7 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
                 vista.setLabelPeriodo("Hace 1 mes");
                 break;
         }
-        
+
         vista.setDiferencia(ingresos - (-gastos));
         vista.setGastos(-(gastos));
         vista.setIngresos(ingresos);
@@ -173,6 +127,7 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
 
     /**
      * Obtiene los todos los movimientos de una cuenta
+     *
      * @return array bidimensional con los datos
      */
     private Object[][] getDatosTabla() {
@@ -192,6 +147,7 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
 
     /**
      * Obtiene los ingresos de una cuenta
+     *
      * @return array bidimensional con los datos
      */
     private Object[][] getDatosTablaIngresos() {
@@ -208,10 +164,10 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
 
         return datosTablas;
     }
-    
-    
+
     /**
      * Obtiene los gastos de una cuenta
+     *
      * @return array bidimensional con los datos
      */
     private Object[][] getDatosTablaExtracciones() {
@@ -227,6 +183,21 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
         }
 
         return datosTablas;
+    }
+
+    private void nuevoUsuario() {
+        JDialog dialogo = new JDialog();
+        NuevoUsuario panel = new NuevoUsuario();
+        panel.addControlador(new ControladorNuevoUsuario(panel, this, dialogo));
+        dialogo.setModal(true);
+        dialogo.add(panel);
+        dialogo.setTitle("Nuevo usuario");
+        dialogo.pack();
+        dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialogo.setLocationRelativeTo(null);
+        dialogo.setResizable(false);
+        dialogo.setModal(true);
+        dialogo.setVisible(true);
     }
 
     /**
@@ -259,6 +230,7 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
         dialogo.setVisible(true);
     }
 
+    //JDialog de acceso
     private void login() {
         JDialog dialogo = new JDialog();
         VistaLogin vista = new VistaLogin();
@@ -268,10 +240,9 @@ public class ControladorPrincipal extends WindowAdapter implements ActionListene
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialogo.pack();
         dialogo.setLocationRelativeTo(null);
+        dialogo.setResizable(false);
         dialogo.setModal(true);
         dialogo.setVisible(true);
     }
-
-
 
 }

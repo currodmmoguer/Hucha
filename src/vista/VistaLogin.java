@@ -7,6 +7,7 @@ package vista;
 
 import controlador.ControladorLogin;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -61,8 +62,12 @@ public class VistaLogin extends javax.swing.JPanel {
         add(jPanel2);
     }// </editor-fold>//GEN-END:initComponents
 
-    public void addUsuarioComboBox(String user) {
-        jComboBox1.addItem(user);
+    public void addUsuarioComboBox(ArrayList<String> users) {
+        jComboBox1.removeAllItems();
+        for (String user: users){
+            jComboBox1.addItem(user);
+        }
+        
     }
 
     public String getUsuario() {
